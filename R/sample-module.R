@@ -218,13 +218,16 @@ sampleModule <- function(input, output, session, sample_data, reports,
   
   output$dynamic_sankey <- renderUI({
     ns <- session$ns
-    #sankeyD3::sankeyNetworkOutput(ns("sankey"), width = "100%",
+    #hiervis::sankeyNetworkOutput(ns("sankey"), width = "100%",
     #                                height = paste0(ifelse(is.null(input$height), 500, input$height),"px"))
     
     do.call(shiny::tagList,
             lapply(seq_along(input$sample_selector), function(i) {
-      sankeyD3::sankeyNetworkOutput(ns(paste0("sankey",i)), width = "100%",
-                                    height = paste0(ifelse(is.null(input$height), 500, input$height),"px"))
+              hiervis::hiervisOutput(ns(paste0("sankey",i)), width = "100%",
+                                            height = paste0(ifelse(is.null(input$height), 500, input$height),"px"))
+              
+#              hiervis::sankeyNetworkOutput(ns(paste0("sankey",i)), width = "100%",
+#                                    height = paste0(ifelse(is.null(input$height), 500, input$height),"px"))
       }))
   })
   
@@ -326,17 +329,17 @@ sampleModule <- function(input, output, session, sample_data, reports,
       updateSelectizeInput(session, "sample_selector", selected = names(reports())[round(input$plot_click$x)])
   })
   
-  output$sankey <- sankeyD3::renderSankeyNetwork({ sankey_network() })
-  output$sankey1 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[1]] })
-  output$sankey2 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[2]] })
-  output$sankey3 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[3]] })
-  output$sankey4 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[4]] })
-  output$sankey5 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[5]] })
-  output$sankey6 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[6]] })
-  output$sankey7 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[7]] })
-  output$sankey8 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[8]] })
-  output$sankey9 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[9]] })
-  output$sankey10 <- sankeyD3::renderSankeyNetwork({ sankey_networks()[[10]] })
+  output$sankey <- hiervis::renderHiervis({ sankey_network() })
+  output$sankey1 <- hiervis::renderHiervis({ sankey_networks()[[1]] })
+  output$sankey2 <- hiervis::renderHiervis({ sankey_networks()[[2]] })
+  output$sankey3 <- hiervis::renderHiervis({ sankey_networks()[[3]] })
+  output$sankey4 <- hiervis::renderHiervis({ sankey_networks()[[4]] })
+  output$sankey5 <- hiervis::renderHiervis({ sankey_networks()[[5]] })
+  output$sankey6 <- hiervis::renderHiervis({ sankey_networks()[[6]] })
+  output$sankey7 <- hiervis::renderHiervis({ sankey_networks()[[7]] })
+  output$sankey8 <- hiervis::renderHiervis({ sankey_networks()[[8]] })
+  output$sankey9 <- hiervis::renderHiervis({ sankey_networks()[[9]] })
+  output$sankey10 <- hiervis::renderHiervis({ sankey_networks()[[10]] })
   
   observeEvent(input$sankey_hover, { hover_plots$taxon <- input$sankey_hover })
   observeEvent(input$sankey1_hover, { hover_plots$taxon <- input$sankey1_hover; hover_plots$report <- 1; })
@@ -397,7 +400,7 @@ sampleModule <- function(input, output, session, sample_data, reports,
   })
   
   colourScale <- reactive({
-    colourScale <- sankeyD3::JS(sprintf("d3.scaleOrdinal().range(d3.schemeCategory20b).domain([%s])",
+    colourScale <- hiervis::JS(sprintf("d3.scaleOrdinal().range(d3.schemeCategory20b).domain([%s])",
                                         paste0('"',c(all_names(),"other"),'"',collapse=",")))
   })
   
